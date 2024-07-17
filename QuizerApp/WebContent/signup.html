@@ -1,0 +1,67 @@
+<form class="signup-form" action="SignupServlet" method="post">
+    <table align="center">
+        <div align="center">
+            <h1><u><b>Welcome to Quizer</b></u></h1>
+            
+            
+             <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding-top: 50px;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        h1 {
+            color: #333;
+        }
+    </style>
+    
+            <tr>
+                <td>Name</td>
+                <td><input type="text" name="name" required /></td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="email" name="email" required /></td>
+            </tr>
+            <tr>
+                <td>Academic Institution</td>
+                <td><input type="text" name="academic_institution" required /></td>
+            </tr>
+            <tr>
+                <td>Field of Study</td>
+                <td><input type="text" name="field_of_study" required /></td>
+            </tr>
+            <tr>
+                <td>Year of Study</td>
+                <td><input type="text" name="year_of_study" required /></td>
+            </tr>
+            <tr>
+                <td>Username</td>
+                <td><input type="text" name="username" required /></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="password" required /></td>
+            </tr>
+            <tr>
+                <td>Confirm Password</td>
+                <td><input type="password" name="confirm_password" required /></td>
+            </tr>
+        </div>
+    </table>
+    <input type="submit" value="SignUp" />
+    <div class="form-group">
+        <input type="checkbox" id="terms" name="terms" required>
+        <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</label>
+    </div>
+    <p>Already have an account? <br>
+    <a href="login.html">Login page</a></p>
+</form>

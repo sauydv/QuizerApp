@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Let's Start the Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding-top: 50px;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            text-align: left;
+        }
+        h1 {
+            color: #333;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question p {
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        #timer {
+            font-size: 20px;
+            color: red;
+        }
+        .results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz</h1>
+        <div id="timer"></div>
+        <form id="quizForm">
+            <div id="question-container">
+                <!-- Question will be dynamically injected here -->
+            </div>
+            <button type="button" id="nextButton" onclick="nextQuestion()">Next</button>
+        </form>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Who invented Java Programming?",
+                options: ["Guido van Rossum", "James Gosling", "Dennis Ritchie", "Bjarne Stroustrup"],
+                answer: "James Gosling",
+                explanation: "Java programming was developed by James Gosling at Sun Microsystems in 1995. James Gosling is well known as the father of Java."
+            },
+            {
+                question: "In which year was the first version of Java released?",
+                options: ["1991", "1995", "1998", "2000"],
+                answer: "1995"
+            },
+            {
+                question: "Can you run a Java program without JRE?",
+                options: ["Yes", "No"],
+                answer: "No"
+            },
+            {
+                question: "What is the size of int in Java?",
+                options: ["8 bits", "16 bits", "32 bits", "64 bits"],
+                answer: "32 bits"
+            },
+            {
+                question: "What is the extension of java code files?",
+                options: [".js", ".txt", ".class", ".java"],
+                answer: ".java",
+                explanation: "Java files have .java extension."
+            },
+            {
+                question: "In java, jar stands for_____.",
+                options: ["Java Archive Runner", "Java Application Resource", "Java Application Runner", "None of the above"],
+                answer: "None of the above",
+                explanation: "A Java ARchive (JAR) is a package file format used to combine all the metadata and resources into a single file."
+            },
+            {
+                question: "Which of the following is not an OOPS concept in Java?",
+                options: ["Polymorphism", "Inheritance", "Compilation", "Encapsulation"],
+                answer: "Compilation",
+                explanation: "There are 4 OOPS concepts in Java: Inheritance, Encapsulation, Polymorphism, and Abstraction."
+            },
+            {
+                question: "Which is a valid keyword in java?",
+                options: ["interface", "string", "Float", "unsigned"],
+                answer: "interface",
+                explanation: "interface is a valid keyword. String and Float are class types. unsigned is a keyword in C/C++ but not in Java."
+            },
+            {
+                question: "What is the numerical range of a char data type in Java?",
+                options: ["0 to 256", "-128 to 127", "0 to 65535", "0 to 32767"],
+                answer: "0 to 65535",
+                explanation: "Char occupies 16-bit in memory, so it supports from 0 to 65535."
+            },
+            {
+                question: "Which of the following is not a Java feature?",
+                options: ["Dynamic", "Architecture Neutral", "Use of pointers", "Object-oriented"],
+                answer: "Use of pointers",
+                explanation: "Java does not support pointers due to security concerns and to provide an effective layer of abstraction."
+            },
+            {
+                question: "Which Java keyword is used to define a subclass?",
+                options: ["extends", "implements", "subclass", "superclass"],
+                answer: "extends",
+                explanation: "The 'extends' keyword is used in Java to create a subclass that inherits fields and methods from another class."
+            },
+            {
+                question: "What does JVM stands for in Java?",
+                options: ["Java Virtual Machine", "Java Very Machine", "Just Virtual Machine", "Jawa Virtual Machine"],
+                answer: "Java Virtual Machine",
+                explanation: "JVM stands for Java Virtual Machine, which is responsible for executing Java bytecode."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let timer;
+        let timeLeft = 30;
+        let totalTime = 0;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startTimer() {
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = timeLeft;
+            timer = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+
+        function loadQuestion(index) {
+            clearInterval(timer);
+            timeLeft = 30; // Reset timer for each question
+            startTimer();
+            const questionContainer = document.getElementById('question-container');
+            questionContainer.innerHTML = `
+                <div class="question">
+                    <p>${questions[index].question}</p>
+                    <div class="options">
+                        ${questions[index].options.map((option, i) => `
+                            <label><input type="radio" name="q${index}" value="${option}"> ${option}</label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function nextQuestion() {
+            const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
+            if (selectedOption) {
+                userAnswers[currentQuestionIndex] = selectedOption.value;
+            } else {
+                userAnswers[currentQuestionIndex] = null;
+            }
+            totalTime += (30 - timeLeft); // Add remaining time to total time
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion(currentQuestionIndex);
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            clearInterval(timer);
+            const form = document.getElementById('quizForm');
+            form.innerHTML = `
+                <h2>Quiz Results</h2>
+                <p>You scored ${calculateScore()} out of ${questions.length}!</p>
+                <p>Total time taken: ${totalTime} seconds</p>
+                <a href="results.html" onclick="storeResults()">View Detailed Results</a>
+                <br><br>
+                <button type="button" onclick="exitQuiz()">Exit</button>
+            `;
+        }
+
+        function calculateScore() {
+            let score = 0;
+            for (let i = 0; i < questions.length; i++) {
+                if (userAnswers[i] === questions[i].answer) {
+                    score++;
+                }
+            }
+            return score;
+        }
+
+        function storeResults() {
+            const results = {
+                score: calculateScore(),
+                totalQuestions: questions.length,
+                totalTime: totalTime,
+                questions: questions,
+                userAnswers: userAnswers
+            };
+            localStorage.setItem('quizResults', JSON.stringify(results));
+        }
+
+        function exitQuiz() {
+            window.location.href = "exit.html"; // Redirect to an exit page or another page as needed
+        }
+
+        shuffle(questions);
+        loadQuestion(currentQuestionIndex);
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Detailed Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding-top: 50px;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            text-align: left;
+            width: 80%;
+        }
+        h1 {
+            color: #333;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question p {
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz Detailed Results</h1>
+        <div id="results-container">
+            <!-- Results will be dynamically injected here -->
+        </div>
+        <button type="button" onclick="exitQuiz()">Exit</button>
+    </div>
+
+    <script>
+        function loadResults() {
+            const resultsContainer = document.getElementById('results-container');
+            const results = JSON.parse(localStorage.getItem('quizResults'));
+
+            if (!results) {
+                resultsContainer.innerHTML = '<p>No results found. Please take the quiz first.</p>';
+                return;
+            }
+
+            let resultHTML = `<p>Overall Score: ${results.score} / ${results.totalQuestions}</p>`;
+            resultHTML += `<p>Total time taken: ${results.totalTime} seconds</p>`;
+
+            results.questions.forEach((question, index) => {
+                const userAnswer = results.userAnswers[index] || 'Not attempted';
+                const correctAnswer = question.answer;
+                const explanation = question.explanation ? `<p>Explanation: ${question.explanation}</p>` : '';
+
+                resultHTML += `
+                    <div class="question">
+                        <p>Question ${index + 1}: ${question.question}</p>
+                        <p>Your Answer: ${userAnswer}</p>
+                        <p>Correct Answer: ${correctAnswer}</p>
+                        ${explanation}
+                    </div>
+                `;
+            });
+
+            resultsContainer.innerHTML = resultHTML;
+        }
+
+        function exitQuiz() {
+            window.location.href = "exit.html"; // Redirect to an exit page or another page as needed
+        }
+
+        // Load the results when the page loads
+        window.onload = loadResults;
+    </script>
+</body>
+</html>
