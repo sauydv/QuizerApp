@@ -1,0 +1,14 @@
+CREATE DATABASE quizapp;
+USE quizapp;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    academic_institution VARCHAR(50) NOT NULL,
+    field_of_study VARCHAR(50) NOT NULL,
+    year_of_study VARCHAR(10) NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+SELECT * FROM users;
